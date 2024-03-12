@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenZoneWifiBot", "GreenZoneWifiBot\GreenZoneWifiBot.csproj", "{7DBA599C-BD11-4058-A78F-9B1AA7A8505C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenZoneWifiBot", "GreenZoneWifiBot\GreenZoneWifiBot.csproj", "{E0B6A1E5-CD1B-4975-8F43-704D91089339}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7DBA599C-BD11-4058-A78F-9B1AA7A8505C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DBA599C-BD11-4058-A78F-9B1AA7A8505C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DBA599C-BD11-4058-A78F-9B1AA7A8505C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DBA599C-BD11-4058-A78F-9B1AA7A8505C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0B6A1E5-CD1B-4975-8F43-704D91089339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0B6A1E5-CD1B-4975-8F43-704D91089339}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0B6A1E5-CD1B-4975-8F43-704D91089339}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0B6A1E5-CD1B-4975-8F43-704D91089339}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
