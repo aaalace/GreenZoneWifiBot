@@ -19,19 +19,20 @@ public class MessageService : IMessageService
     
     public async Task BotOnMessageReceived(Message message, CancellationToken cts)
     {
-        _logger.LogInformation("<Recieve message update> {Log}", LogManager.LogMessage(message));
+        _logger.LogInformation("{LogMessage}",LogManager.CreateMessageLog(message));
         
         var action = message.Type switch
         {
-            MessageType.Text => Method(_botClient, message, cts),
-            MessageType.Sticker => MethodSticker(_botClient, message, cts),
-            _ => MethodError(_botClient, message, cts)
+            MessageType.Text => TextAction(_botClient, message, cts),
+            MessageType.Sticker => StickerAction(_botClient, message, cts),
+            MessageType.Document => DocumentAction(_botClient, message, cts),
+            _ => ErrorAction(_botClient, message, cts)
         };
         
         await action;
         return;
 
-        static async Task<Message> Method(ITelegramBotClient botClient, Message message, CancellationToken cts)
+        static async Task<Message> TextAction(ITelegramBotClient botClient, Message message, CancellationToken cts)
         {
             return await botClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
@@ -39,7 +40,7 @@ public class MessageService : IMessageService
                 cancellationToken: cts);
         }
         
-        static async Task<Message> MethodSticker(ITelegramBotClient botClient, Message message, CancellationToken cts)
+        static async Task<Message> StickerAction(ITelegramBotClient botClient, Message message, CancellationToken cts)
         {
             return await botClient.SendStickerAsync(
                 chatId: message.Chat.Id,
@@ -47,11 +48,19 @@ public class MessageService : IMessageService
                 cancellationToken: cts);
         }
         
-        static async Task<Message> MethodError(ITelegramBotClient botClient, Message message, CancellationToken cts)
+        static async Task<Message> DocumentAction(ITelegramBotClient botClient, Message message, CancellationToken cts)
+        {
+            return await botClient.SendDocumentAsync(
+                chatId: message.Chat.Id,
+                document: InputFile.FromFileId(message.Document!.FileId),
+                cancellationToken: cts);
+        }
+        
+        static async Task<Message> ErrorAction(ITelegramBotClient botClient, Message message, CancellationToken cts)
         {
             return await botClient.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: "Error",
+                text: "Sorry, I have nothing to tell you about this",
                 cancellationToken: cts);
         }
     }

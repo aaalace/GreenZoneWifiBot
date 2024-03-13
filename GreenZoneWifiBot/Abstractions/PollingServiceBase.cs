@@ -15,7 +15,7 @@ public abstract class PollingServiceBase : BackgroundService
  
     protected override async Task ExecuteAsync(CancellationToken cts)
     {
-        _logger.LogInformation("Starting polling");
+        _logger.LogInformation("Starting polling | {DateTime}", DateTime.Now);
         
         while (!cts.IsCancellationRequested)
         {

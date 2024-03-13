@@ -39,7 +39,7 @@ public class UpdateHandler : IUpdateHandler
             _ => exception.ToString()
         };
 
-        _logger.LogInformation("<HandleError> {ErrorMessage}", ErrorMessage);
+        _logger.LogInformation("Error handled: {ErrorMessage}", ErrorMessage);
         
         if (exception is RequestException)
             await Task.Delay(TimeSpan.FromSeconds(2), cts);

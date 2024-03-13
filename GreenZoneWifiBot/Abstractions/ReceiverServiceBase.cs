@@ -29,7 +29,7 @@ public abstract class ReceiverServiceBase
         };
 
         var me = await _botClient.GetMeAsync(cts);
-        _logger.LogInformation("Start receiving updates for {BotName}", me.Username ?? "GreenZoneWifiBot");
+        _logger.LogInformation("Start receiving updates for {BotName} | {DateTime}", me.Username ?? "GreenZoneWifiBot", DateTime.Now);
         
         await _botClient.ReceiveAsync(
             updateHandler: _updateHandler,

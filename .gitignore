@@ -455,3 +455,4 @@ $RECYCLE.BIN/
 
 ## Custom ignores
 appsettings.Secrets.json
+var/

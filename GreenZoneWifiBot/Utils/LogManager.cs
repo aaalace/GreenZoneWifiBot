@@ -5,10 +5,10 @@ namespace GreenZoneWifiBot.Utils;
 
 public static class LogManager
 {
-    public static string LogMessage(Message message)
+    public static string CreateMessageLog(Message message)
     {
         var sb = new StringBuilder();
-        sb.Append($"MessageId: {message.MessageId}");
+        sb.Append($"> MessageId: {message.MessageId}");
         sb.Append($"|ChatId: {message.Chat.Id}");
         sb.Append($"|MessageType: {message.Type}");
         sb.Append($"|DateTime: {message.Date}");
