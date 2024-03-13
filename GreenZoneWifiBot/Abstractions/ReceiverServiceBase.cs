@@ -5,7 +5,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace GreenZoneWifiBot.Abstractions;
 
-public abstract class ReceiverServiceBase : IReceiverService
+public abstract class ReceiverServiceBase
 {
     private readonly ITelegramBotClient _botClient;
     private readonly UpdateHandler _updateHandler;

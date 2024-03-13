@@ -1,6 +1,5 @@
 ﻿using GreenZoneWifiBot.Abstractions;
 using Telegram.Bot;
-using Telegram.Bot.Polling;
 
 namespace GreenZoneWifiBot.Services;
 

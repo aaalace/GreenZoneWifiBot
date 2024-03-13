@@ -4,10 +4,10 @@ namespace GreenZoneWifiBot.Abstractions;
 
 public abstract class PollingServiceBase : BackgroundService
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<PollingServiceBase> _logger;
     private readonly IServiceProvider _serviceProvider;
     
-    protected PollingServiceBase(IServiceProvider serviceProvider, ILogger logger)
+    protected PollingServiceBase(IServiceProvider serviceProvider, ILogger<PollingServiceBase> logger)
     {
         _logger = logger;
         _serviceProvider = serviceProvider;

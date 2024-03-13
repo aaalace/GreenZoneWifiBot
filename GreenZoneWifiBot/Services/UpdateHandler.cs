@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using GreenZoneWifiBot.Interfaces;
+using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
@@ -7,75 +8,40 @@ namespace GreenZoneWifiBot.Services;
 
 public class UpdateHandler : IUpdateHandler
 {
-    private readonly ITelegramBotClient _botClient;
     private readonly ILogger<UpdateHandler> _logger;
+    private readonly IMessageService _messageService;
     
-    public UpdateHandler(ITelegramBotClient botClient, ILogger<UpdateHandler> logger)
+    public UpdateHandler(
+        ILogger<UpdateHandler> logger,
+        IMessageService messageService)
     {
-        _botClient = botClient;
         _logger = logger;
+        _messageService = messageService;
     }
 
-    public async Task HandleUpdateAsync(ITelegramBotClient _, Update update, CancellationToken cancellationToken)
+    public async Task HandleUpdateAsync(ITelegramBotClient _, Update update, CancellationToken cts)
     {
-        var handler = update switch
+        var handlerByUpdateType = update switch
         {
-            { Message: { } message } => BotOnMessageReceived(message, cancellationToken),
-            _ => UnknownUpdateHandlerAsync(update)
+            { Message: { } message } => _messageService.BotOnMessageReceived(message, cts),
+            { EditedMessage: { } message } => _messageService.BotOnMessageReceived(message, cts),
+            _ => Task.CompletedTask
         };
 
-        await handler;
-    }
-
-    private async Task BotOnMessageReceived(Message message, CancellationToken cts)
-    {
-        _logger.LogInformation("Receive message type: {MessageType}", message.Type);
-        
-        if (message.Text is null) return;
-
-        var action = message.Text.Split(' ')[0] switch
-        {
-            "/smth" => Method(_botClient, message, cts),
-            _ => MethodError(_botClient, message, cts)
-        };
-        
-        await action;
-        return;
-
-        static async Task<Message> Method(ITelegramBotClient botClient, Message message, CancellationToken cts)
-        {
-            return await botClient.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: "Choose",
-                cancellationToken: cts);
-        }
-        
-        static async Task<Message> MethodError(ITelegramBotClient botClient, Message message, CancellationToken cts)
-        {
-            return await botClient.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: "Error",
-                cancellationToken: cts);
-        }
+        await handlerByUpdateType;
     }
     
-    private Task UnknownUpdateHandlerAsync(Update update)
-    {
-        _logger.LogInformation("Unknown update type: {UpdateType}", update.Type);
-        return Task.CompletedTask;
-    }
-    
-    public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+    public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cts)
     {
         var ErrorMessage = exception switch
         {
-            ApiRequestException apiRequestException => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
+            ApiRequestException apiException => $"Telegram API Error: {apiException.Message}",
             _ => exception.ToString()
         };
 
         _logger.LogInformation("HandleError: {ErrorMessage}", ErrorMessage);
         
         if (exception is RequestException)
-            await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
+            await Task.Delay(TimeSpan.FromSeconds(2), cts);
     }
 }
