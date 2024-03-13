@@ -19,7 +19,7 @@ public class MessageService : IMessageService
     
     public async Task BotOnMessageReceived(Message message, CancellationToken cts)
     {
-        _logger.LogInformation("<Recieve update> {Log}", LogManager.LogMessage(message));
+        _logger.LogInformation("<Recieve message update> {Log}", LogManager.LogMessage(message));
         
         var action = message.Type switch
         {

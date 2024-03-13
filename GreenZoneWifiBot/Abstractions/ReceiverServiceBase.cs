@@ -29,9 +29,8 @@ public abstract class ReceiverServiceBase
         };
 
         var me = await _botClient.GetMeAsync(cts);
-        _logger.LogInformation("Start receiving updates for {BotName}", me.Username ?? "My Awesome Bot");
-
-        // Start receiving updates
+        _logger.LogInformation("Start receiving updates for {BotName}", me.Username ?? "GreenZoneWifiBot");
+        
         await _botClient.ReceiveAsync(
             updateHandler: _updateHandler,
             receiverOptions: receiverOptions,
