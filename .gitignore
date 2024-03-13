@@ -454,4 +454,4 @@ $RECYCLE.BIN/
 !.vscode/extensions.json
 
 ## Custom ignores
-.env
+appsettings.Secrets.json
