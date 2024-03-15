@@ -10,25 +10,29 @@ public class UpdateHandler : IUpdateHandler
 {
     private readonly ILogger<UpdateHandler> _logger;
     private readonly IMessageService _messageService;
+    private readonly ICallbackQuieryService _callbackQuieryService;
     
     public UpdateHandler(
         ILogger<UpdateHandler> logger,
-        IMessageService messageService)
+        IMessageService messageService,
+        ICallbackQuieryService callbackQuieryService)
     {
         _logger = logger;
         _messageService = messageService;
+        _callbackQuieryService = callbackQuieryService;
     }
 
     public async Task HandleUpdateAsync(ITelegramBotClient _, Update update, CancellationToken cts)
     {
-        var handlerByUpdateType = update switch
+        var handlerByUpdateRequestType = update switch
         {
             { Message: { } message } => _messageService.BotOnMessageReceived(message, cts),
             { EditedMessage: { } message } => _messageService.BotOnMessageReceived(message, cts),
+            { CallbackQuery: {} callbackQuery } => _callbackQuieryService.BotOnCallbackQuieryReceived(callbackQuery, cts),
             _ => Task.CompletedTask
         };
 
-        await handlerByUpdateType;
+        await handlerByUpdateRequestType;
     }
     
     public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cts)

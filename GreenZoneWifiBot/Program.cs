@@ -31,6 +31,7 @@ builder.ConfigureServices((context, services) =>
     
     // Adding services.
     services.AddTransient<IMessageService, MessageService>();
+    services.AddTransient<ICallbackQuieryService, CallbackQuieryService>();
     services.AddScoped<UpdateHandler>();
     services.AddScoped<ReceiverService>();
     services.AddHostedService<PollingService>();

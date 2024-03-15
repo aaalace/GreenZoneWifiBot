@@ -14,10 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services\TypeServices\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Lib\Lib.csproj" />
     </ItemGroup>
 </Project>
