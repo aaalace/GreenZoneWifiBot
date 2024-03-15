@@ -1,15 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-GreenZoneWifiBot-6C1E17E0-CD32-49B2-BD1C-FB1D10A61C60</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="dotenv.net" Version="3.1.3" />
-      <PackageReference Include="Telegram.Bot" Version="19.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0-preview.2.24128.5" />
+        <PackageReference Include="Telegram.Bot" Version="20.0.0-alpha.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Lib\Lib.csproj" />
+    </ItemGroup>
 </Project>

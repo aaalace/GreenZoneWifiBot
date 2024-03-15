@@ -1,74 +1,44 @@
-﻿using Telegram.Bot;
-using Telegram.Bot.Exceptions;
-using Telegram.Bot.Polling;
-using Telegram.Bot.Types;
+using GreenZoneWifiBot.Services;
+using GreenZoneWifiBot.Interfaces;
+using GreenZoneWifiBot.Utils.Logging;
+using Telegram.Bot;
 
-namespace GreenZoneWifiBot;
+// Creating host builder.
+var builder = Host.CreateDefaultBuilder();
 
-public static class Solution
+// App configuration.
+builder.ConfigureAppConfiguration(configBuilder =>
+    configBuilder.AddJsonFile("appsettings.Secrets.json", optional: true, reloadOnChange: true));
+
+// Logging configuration.
+builder.ConfigureLogging(loggingBuilder =>
 {
-    private static ITelegramBotClient? _botClient;
-    private static ReceiverOptions? _receiverOptions;
+    var curenntDir = new DirectoryInfo(Directory.GetCurrentDirectory());
+    var varSaveDirPath = curenntDir.Parent ?? curenntDir;
+    loggingBuilder.AddProvider(new FileLoggerProvider(Path.Combine(varSaveDirPath.FullName, "var")));
+});
     
-    public static async Task Main()
-    {
-        Startup.ConfigureEnvironment();
+// Services configuration.
+builder.ConfigureServices((context, services) =>
+{
+    // Getting tg bot token.
+    var token = context.Configuration["GreenZoneBotToken"] ??
+                throw new Exception("Can not launch bot because bot token is not found");
 
-        // Environment variable TgBotToken
-        var tgBotToken = Environment.GetEnvironmentVariable("TgBotToken") ?? 
-                         throw new Exception("Can not find token");
-
-        _botClient = new TelegramBotClient(tgBotToken);
-
-        _receiverOptions = Startup.ConfigureReceiverOptions();
-        
-        using CancellationTokenSource cts = new();
-
-        _botClient.StartReceiving(
-            updateHandler: HandleUpdateAsync,
-            pollingErrorHandler: HandlePollingErrorAsync,
-            receiverOptions: _receiverOptions,
-            cancellationToken: cts.Token
-        );
-        
-        var bot = await _botClient.GetMeAsync(cts.Token);
-        // TODO: Microsoft Extensions Logging
-        Console.WriteLine($"{bot.IsBot} <> {bot.FirstName} started");
-        
-        await Task.Delay(-1, cts.Token);
-    }
+    // Adding tg bot as HttpClient.
+    services.AddHttpClient("TelegramBotClient")
+        .AddTypedClient<ITelegramBotClient>(_ => new TelegramBotClient(new TelegramBotClientOptions(token)));
     
-    private static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
-    {
-        if (update.Message is not { } message) return;
-        if (message.Text is not { } messageText) return;
-        
-        var chatId = message.Chat.Id;
-        var user = message.From;
+    // Adding services.
+    services.AddTransient<IMessageService, MessageService>();
+    services.AddTransient<ICallbackQuieryService, CallbackQuieryService>();
+    services.AddScoped<UpdateHandler>();
+    services.AddScoped<ReceiverService>();
+    services.AddHostedService<PollingService>();
+});
 
-        // TODO: Microsoft Extensions Logging (also make a message sample)
-        Console.WriteLine($"Received a '{message.Text}' message in chat {chatId} from {user}, date: {message.Date}.");
-        
-        // Echo
-        await botClient.SendTextMessageAsync(
-            chatId: chatId,
-            text: "You said:\n" + messageText,
-            cancellationToken: cancellationToken
-            );
-    } 
+// Building host.
+using var host = builder.Build();
 
-    private static Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-    {
-        var ErrorMessage = exception switch
-        {
-            ApiRequestException apiRequestException
-                => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-            _ => exception.ToString()
-        };
-
-        // TODO: Microsoft Extensions Logging 
-        Console.WriteLine(ErrorMessage);
-        
-        return Task.CompletedTask;
-    }
-}
+// Running host.
+await host.RunAsync();
