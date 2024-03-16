@@ -16,4 +16,10 @@
     <ItemGroup>
       <ProjectReference Include="..\Lib\Lib.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="bin\Debug\net6.0\tmpChoice\" />
+      <Folder Include="tmpChoice\" />
+      <Folder Include="uploads\" />
+    </ItemGroup>
 </Project>

@@ -34,23 +34,16 @@ public class CallbackQuieryService : ICallbackQuieryService
             "/sort" => 
                 Actions.SortAction(_botClient, callbackQuery, cts),
             "/choose" => 
-                Actions.ShowAction(_botClient, callbackQuery, cts),
+                Actions.ChooseAction(_botClient, callbackQuery, cts),
             { } field when Fields.values.Contains(field) => 
                 Actions.SortFieldAction(field, _botClient, callbackQuery, cts),
-            _ => ErrorAction(_botClient, callbackQuery, cts)
+            { } field when Fields.valuesChoice.Contains(field) => 
+                Actions.ChooseFieldAction(field, _botClient, callbackQuery, cts),
+            _ => Actions.ErrorCallbackAction(_botClient, callbackQuery, cts)
         };
 
         await action;
         
         await Task.CompletedTask;
-        return;
-
-        static async Task<Message> ErrorAction(ITelegramBotClient botClient, CallbackQuery callback, CancellationToken cts)
-        {
-            return await botClient.SendTextMessageAsync(
-                chatId: callback.Message!.Chat.Id,
-                text: "Sorry, I have nothing to tell you about this",
-                cancellationToken: cts);
-        }
     }
 }

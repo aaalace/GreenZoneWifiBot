@@ -30,7 +30,7 @@ public class MessageService : IMessageService
         {
             MessageType.Text => TextAction(_botClient, message, cts),
             MessageType.Document => DocumentAction(_botClient, message, cts),
-            _ => ErrorAction(_botClient, message, cts)
+            _ => Actions.ErrorMessageAction(_botClient, message, cts)
         };
         
         await action;
@@ -41,7 +41,7 @@ public class MessageService : IMessageService
             var action = message.Text switch
             {
                "/start" => Actions.StartAction(botClient, message, cts),
-               _ => ErrorAction(botClient, message, cts)
+               _ => Actions.PlainTextAction(botClient, message, cts)
             };
 
             await action;
@@ -55,7 +55,7 @@ public class MessageService : IMessageService
             var file = await botClient.GetFileAsync(document.FileId, cts);
             if (file.FilePath == null)
             {
-                await ErrorAction(botClient, message, cts, "Error in uploading file, try again later");
+                await Actions.ErrorMessageAction(botClient, message, cts, "Error in uploading file, try again later");
                 return;
             }
 
@@ -81,7 +81,7 @@ public class MessageService : IMessageService
                     // Check for csv format if not json format.
                     var csvStream = new FileStream(localPath, FileMode.Open);
                     var csv = new CsvProcessing();
-                    var collection = await csv.Read(csvStream);
+                    var collection = csv.Read(csvStream);
                     csvStream.Close();
                     
                     // Delete created file if neither json nor csv format.
@@ -97,15 +97,14 @@ public class MessageService : IMessageService
                     }
 
                     // Write to file as json if csv format
-                    var jsonUpd = new JsonProcessing();
-                    var jsonUpdStream = await jsonUpd.Write(collection, localPath);
+                    var jsonUpd = new JsonProcessing(localPath);
+                    var jsonUpdStream = await jsonUpd.Write(collection);
                     jsonUpdStream.Close();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e);
-                await ErrorAction(botClient, message, cts, "Error in uploading file, try again later");
+                await Actions.ErrorMessageAction(botClient, message, cts, "Error in uploading file, try again later");
                 return;
             }
             
@@ -114,15 +113,6 @@ public class MessageService : IMessageService
                 text: $"<b>{document.FileName}</b> was successfully uploaded, what do you want to do next?",
                 parseMode: ParseMode.Html,
                 replyMarkup: new InlineKeyboardMarkup(KeyBoards.FileWorkKeyBoard),
-                cancellationToken: cts);
-        }
-        
-        static async Task ErrorAction(ITelegramBotClient botClient, Message message, CancellationToken cts, 
-            string text = "Sorry, I have nothing to tell you about this")
-        {
-            await botClient.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: text,
                 cancellationToken: cts);
         }
     }
