@@ -10,11 +10,12 @@ namespace GreenZoneWifiBot.Services.CommandActions;
 public static partial class Actions
 {
     // show command
-    public static async Task ShowAction(ITelegramBotClient botClient, CallbackQuery callback, CancellationToken cts)
+    public static async Task ShowAction(
+        ITelegramBotClient botClient, CallbackQuery callback, CancellationToken cts)
     {
         if (callback.Message == null)
         {
-            await ErrorAction(botClient, callback, cts);
+            await ErrorCallbackAction(botClient, callback, cts);
             return;
         }
 
@@ -24,7 +25,7 @@ public static partial class Actions
 
         if (!System.IO.File.Exists(fullPath))
         {
-            await ErrorAction(botClient, callback, cts, "File was not uploaded yet, maybe it had a wrong format");
+            await ErrorCallbackAction(botClient, callback, cts, "File was not uploaded yet, maybe it had a wrong format");
             return;
         }
         
@@ -45,7 +46,7 @@ public static partial class Actions
         {
             await botClient.SendTextMessageAsync(
                 chatId: chatId,
-                text: "Sorry, data is too long to be shown fully\nIf you want to watch it please download",
+                text: "The file is too large to show in full, if you want to view the entire file, download it",
                 cancellationToken: cts);
         }
     } 

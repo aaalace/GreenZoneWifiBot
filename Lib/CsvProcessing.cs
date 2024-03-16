@@ -9,79 +9,70 @@ namespace Lib;
 public class CsvProcessing
 {
     public bool State { get; private set; }
-    // public string? RuHeader { get; private set; }
-    
+    public string? Path { get; private set; }
+
     private readonly CsvConfiguration configuration = new(CultureInfo.InvariantCulture)  
     {  
         Encoding = Encoding.UTF8,  
         Delimiter = ";"
     }; 
+    
+    public CsvProcessing() {}
+    public CsvProcessing(string path) => Path = path;
 
-    public Task<List<NetPoint>> Read(FileStream stream)
+    public List<NetPoint> Read(FileStream stream)
     {
         var collection = new List<NetPoint>();
         
         try
         {
-            var reader = new StreamReader(stream);
-            var csv = new CsvReader(reader, configuration);
+            using var reader = new StreamReader(stream);
+            using var csv = new CsvReader(reader, configuration);
             csv.Context.RegisterClassMap<NetPointMap>();
 
             var headersCounter = 0;
-            while (csv.Read())  
-            {  
-                try  
-                {  
-                    if (headersCounter < 2)
+            while (csv.Read())
+            {
+                if (headersCounter < 2)
+                {
+                    headersCounter++;
+                    if (headersCounter == 2)
                     {
-                        headersCounter++;
-                        if (headersCounter == 2)
-                        {
-                            // RuHeader = reader.ReadLine();
-                            // if (RuHeader == null) throw new Exception("RuHeader do not exists");
-                            continue;
-                        }
-                        csv.ReadHeader();
+                        // RuHeader = reader.ReadLine();
+                        // if (RuHeader == null) throw new Exception("RuHeader do not exists");
                         continue;
                     }
-                    
-                    collection.Add(csv.GetRecord<NetPoint>());  
-                }  
-                catch (Exception)
-                {
-                    State = false;
-                    return Task.FromResult(collection);
-                }  
+
+                    csv.ReadHeader();
+                    continue;
+                }
+
+                collection.Add(csv.GetRecord<NetPoint>());
             }  
             
-            reader.Close();
-            csv.Dispose();
             State = true;
         }
         catch (Exception) { State = false; }
 
-        return Task.FromResult(collection);
+        return collection;
     }
     
-    public FileStream Write(List<NetPoint> points, string path)
+    public Stream Write(IEnumerable<NetPoint> points)
     {
+        if (Path == null) { return Stream.Null;}
+        
         try
         {
-            var writer = new StreamWriter(path);
-            var csv = new CsvWriter(writer, configuration);
+            using var writer = new StreamWriter(Path);
+            using var csv = new CsvWriter(writer, configuration);
             csv.Context.RegisterClassMap<NetPointMap>();
+            
             csv.WriteRecords(points);
-            writer.Close();
-                
             State = true;
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            State = false;
-        }
+        catch (Exception) { State = false; }
 
-        var stream = File.Open(path, FileMode.OpenOrCreate);
+        var stream = File.Open(Path, FileMode.OpenOrCreate);
         return stream;
     }
 }

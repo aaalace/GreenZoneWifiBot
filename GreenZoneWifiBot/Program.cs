@@ -5,6 +5,10 @@ using GreenZoneWifiBot.Utils;
 using GreenZoneWifiBot.Utils.Logging;
 using Telegram.Bot;
 
+if (!Directory.Exists("uploads")) Directory.CreateDirectory("uploads");
+if (!Directory.Exists("var"))Directory.CreateDirectory("var");
+if (!Directory.Exists("tmpChoice"))Directory.CreateDirectory("tmpChoice");
+
 // Creating host builder.
 var builder = Host.CreateDefaultBuilder();
 
