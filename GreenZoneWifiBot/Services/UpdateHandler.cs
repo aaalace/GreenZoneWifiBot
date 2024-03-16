@@ -31,7 +31,7 @@ public class UpdateHandler : IUpdateHandler
             { CallbackQuery: {} callbackQuery } => _callbackQuieryService.BotOnCallbackQuieryReceived(callbackQuery, cts),
             _ => Task.CompletedTask
         };
-
+        
         await handlerByUpdateRequestType;
     }
     

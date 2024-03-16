@@ -1,6 +1,6 @@
 ﻿using CsvHelper.Configuration;
 
-namespace Lib;
+namespace Lib.Entities;
 
 sealed class NetPointMap : ClassMap<NetPoint>
 {
