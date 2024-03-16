@@ -1,5 +1,7 @@
-using GreenZoneWifiBot.Services;
 using GreenZoneWifiBot.Interfaces;
+using GreenZoneWifiBot.Services;
+using GreenZoneWifiBot.Services.UpdateActions;
+using GreenZoneWifiBot.Utils;
 using GreenZoneWifiBot.Utils.Logging;
 using Telegram.Bot;
 
@@ -13,9 +15,8 @@ builder.ConfigureAppConfiguration(configBuilder =>
 // Logging configuration.
 builder.ConfigureLogging(loggingBuilder =>
 {
-    var curenntDir = new DirectoryInfo(Directory.GetCurrentDirectory());
-    var varSaveDirPath = curenntDir.Parent ?? curenntDir;
-    loggingBuilder.AddProvider(new FileLoggerProvider(Path.Combine(varSaveDirPath.FullName, "var")));
+    var loggerPath = PathGetter.Get("var");
+    loggingBuilder.AddProvider(new FileLoggerProvider(loggerPath));
 });
     
 // Services configuration.
@@ -23,7 +24,7 @@ builder.ConfigureServices((context, services) =>
 {
     // Getting tg bot token.
     var token = context.Configuration["GreenZoneBotToken"] ??
-                throw new Exception("Can not launch bot because bot token is not found");
+                throw new Exception("Can not launch bot because token was not found");
 
     // Adding tg bot as HttpClient.
     services.AddHttpClient("TelegramBotClient")

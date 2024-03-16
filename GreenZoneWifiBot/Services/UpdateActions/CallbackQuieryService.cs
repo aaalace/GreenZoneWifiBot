@@ -1,6 +1,8 @@
-﻿using GreenZoneWifiBot.Utils.Logging;
+﻿using GreenZoneWifiBot.Core;
+using GreenZoneWifiBot.Services.CommandActions;
+using GreenZoneWifiBot.Utils.Logging;
 
-namespace GreenZoneWifiBot.Services;
+namespace GreenZoneWifiBot.Services.UpdateActions;
 
 using Interfaces;
 using Telegram.Bot;
@@ -20,10 +22,21 @@ public class CallbackQuieryService : ICallbackQuieryService
     public async Task BotOnCallbackQuieryReceived(CallbackQuery callbackQuery, CancellationToken cts)
     {
         _logger.LogInformation("{LogMessage}", LogManager.CreateCallbackLog(callbackQuery));
-            
+        
         var action = callbackQuery.Data switch
         {
-            "/show" => CommandActions.ShowAction(_botClient, callbackQuery, cts),
+            "/show" => 
+                Actions.ShowAction(_botClient, callbackQuery, cts),
+            "/download" => 
+                Actions.DownloadAction(_botClient, callbackQuery, cts),
+            "/downloadJson" or "/downloadCsv" => 
+                Actions.DownloadFormatAction(_botClient, callbackQuery, cts),
+            "/sort" => 
+                Actions.SortAction(_botClient, callbackQuery, cts),
+            "/choose" => 
+                Actions.ShowAction(_botClient, callbackQuery, cts),
+            { } field when Fields.values.Contains(field) => 
+                Actions.SortFieldAction(field, _botClient, callbackQuery, cts),
             _ => ErrorAction(_botClient, callbackQuery, cts)
         };
 

@@ -1,5 +1,7 @@
 ﻿using GreenZoneWifiBot.Core;
 using GreenZoneWifiBot.Interfaces;
+using GreenZoneWifiBot.Services.CommandActions;
+using GreenZoneWifiBot.Utils;
 using GreenZoneWifiBot.Utils.Logging;
 using Lib;
 using Telegram.Bot;
@@ -7,7 +9,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace GreenZoneWifiBot.Services;
+namespace GreenZoneWifiBot.Services.UpdateActions;
 
 public class MessageService : IMessageService
 {
@@ -38,7 +40,7 @@ public class MessageService : IMessageService
         {
             var action = message.Text switch
             {
-               "/start" => CommandActions.StartAction(botClient, message, cts),
+               "/start" => Actions.StartAction(botClient, message, cts),
                _ => ErrorAction(botClient, message, cts)
             };
 
@@ -59,35 +61,45 @@ public class MessageService : IMessageService
 
             try
             {
-                var curenntDir = new DirectoryInfo(Directory.GetCurrentDirectory());
-                var varParrentPath = curenntDir.Parent ?? curenntDir;
-                var savePath = Path.Combine(varParrentPath.FullName, "uploads");
+                // Getting full path to user's file.
+                var savePath = PathGetter.Get("uploads");
                 var localPath = Path.Combine(savePath, chatId);
                 
+                // Write to file.
                 var stream = new FileStream(localPath, FileMode.Create);
                 await botClient.DownloadFileAsync(file.FilePath, stream, cts);
                 stream.Close();
                 
-                var csvStream = new FileStream(localPath, FileMode.Open);
-                var csv = new CsvProcessing();
-                await csv.Read(csvStream);
-                csvStream.Close();
-                if (!csv.State)
+                // Check if json format.
+                var jsonStream = new FileStream(localPath, FileMode.Open);
+                var json = new JsonProcessing();
+                await json.Read(jsonStream);
+                jsonStream.Close();
+                
+                if (!json.State)
                 {
-                    var jsonStream = new FileStream(localPath, FileMode.Open);
-                    var json = new JsonProcessing();
-                    await json.Read(jsonStream);
-                    jsonStream.Close();
-                    if (!json.State)
+                    // Check for csv format if not json format.
+                    var csvStream = new FileStream(localPath, FileMode.Open);
+                    var csv = new CsvProcessing();
+                    var collection = await csv.Read(csvStream);
+                    csvStream.Close();
+                    
+                    // Delete created file if neither json nor csv format.
+                    if (!csv.State)
                     {
                         System.IO.File.Delete(localPath);
-                    
+
                         await botClient.SendTextMessageAsync(
                             chatId: chatId,
-                            text: "Wrong data format in file",
+                            text: "Wrong data format in file, send a new one",
                             cancellationToken: cts);
                         return;
                     }
+
+                    // Write to file as json if csv format
+                    var jsonUpd = new JsonProcessing();
+                    var jsonUpdStream = await jsonUpd.Write(collection, localPath);
+                    jsonUpdStream.Close();
                 }
             }
             catch (Exception e)
