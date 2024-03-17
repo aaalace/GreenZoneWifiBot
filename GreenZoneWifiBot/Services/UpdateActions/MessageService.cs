@@ -22,6 +22,9 @@ public class MessageService : IMessageService
         _botClient = botClient;
     }
     
+    /// <summary>
+    /// Handles messages. Calls different actions in different cases.
+    /// </summary>
     public async Task BotOnMessageReceived(Message message, CancellationToken cts)
     {
         _logger.LogInformation("{LogMessage}",LogManager.CreateMessageLog(message));
@@ -36,6 +39,7 @@ public class MessageService : IMessageService
         await action;
         return;
 
+        // If message - text.
         static async Task TextAction(ITelegramBotClient botClient, Message message, CancellationToken cts)
         {
             var action = message.Text switch
@@ -47,6 +51,7 @@ public class MessageService : IMessageService
             await action;
         }
         
+        // If message - document.
         static async Task DocumentAction(ITelegramBotClient botClient, Message message, CancellationToken cts)
         {
             var document = message.Document!;

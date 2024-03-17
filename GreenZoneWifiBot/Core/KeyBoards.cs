@@ -2,6 +2,9 @@
 
 namespace GreenZoneWifiBot.Core;
 
+/// <summary>
+/// Bot's keyboards.
+/// </summary>
 public static class KeyBoards
 {
     

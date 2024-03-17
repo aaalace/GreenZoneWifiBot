@@ -13,6 +13,9 @@ public abstract class PollingServiceBase : BackgroundService
         _serviceProvider = serviceProvider;
     }
  
+    /// <summary>
+    /// Executes receiving from bot.
+    /// </summary>
     protected override async Task ExecuteAsync(CancellationToken cts)
     {
         _logger.LogInformation("Starting polling | {DateTime}", DateTime.Now);

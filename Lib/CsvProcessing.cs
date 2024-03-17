@@ -20,6 +20,9 @@ public class CsvProcessing
     public CsvProcessing() {}
     public CsvProcessing(string path) => Path = path;
 
+    /// <summary>
+    /// Reads filestream. Saves in user's data file. Returns collection.
+    /// </summary>
     public List<NetPoint> Read(FileStream stream)
     {
         var collection = new List<NetPoint>();
@@ -57,6 +60,9 @@ public class CsvProcessing
         return collection;
     }
     
+    /// <summary>
+    /// Collection -> stream.
+    /// </summary>
     public Stream Write(IEnumerable<NetPoint> points)
     {
         if (Path == null) { return Stream.Null;}

@@ -4,4 +4,3 @@ services:
       context: .
       target: final
       dockerfile: GreenZoneWifiBot/Dockerfile
-  

@@ -21,6 +21,9 @@ public abstract class ReceiverServiceBase
         _logger = logger;
     }
     
+    /// <summary>
+    /// Configuring bot client on receive.
+    /// </summary>v
     public async Task ReceiveAsync(CancellationToken cts)
     {
         var receiverOptions = new ReceiverOptions

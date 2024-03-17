@@ -22,6 +22,9 @@ public class UpdateHandler : IUpdateHandler
         _callbackQuieryService = callbackQuieryService;
     }
 
+    /// <summary>
+    /// Handling updates.
+    /// </summary>
     public async Task HandleUpdateAsync(ITelegramBotClient _, Update update, CancellationToken cts)
     {
         var handlerByUpdateRequestType = update switch
@@ -35,6 +38,9 @@ public class UpdateHandler : IUpdateHandler
         await handlerByUpdateRequestType;
     }
     
+    /// <summary>
+    /// Handling received errors.
+    /// </summary>
     public async Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cts)
     {
         var ErrorMessage = exception switch

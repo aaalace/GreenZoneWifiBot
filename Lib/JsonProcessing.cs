@@ -19,6 +19,9 @@ public class JsonProcessing
     public JsonProcessing() {}
     public JsonProcessing(string path) => Path = path;
     
+    /// <summary>
+    /// Reads filestream. Saves in user's data file. Returns collection.
+    /// </summary>
     public async Task<List<NetPoint>> Read(FileStream stream)
     {
         var collection = new List<NetPoint>();
@@ -32,6 +35,9 @@ public class JsonProcessing
         return collection ?? new List<NetPoint>();
     }
 
+    /// <summary>
+    /// Collection -> stream.
+    /// </summary>
     public async Task<Stream> Write(IEnumerable<NetPoint> points)
     {
         if (Path == null) return Stream.Null;

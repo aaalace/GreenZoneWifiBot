@@ -1,3 +1,5 @@
+// https://web.telegram.org/k/#@GreenZoneWifiBot
+
 using GreenZoneWifiBot.Interfaces;
 using GreenZoneWifiBot.Services;
 using GreenZoneWifiBot.Services.UpdateActions;
@@ -6,8 +8,8 @@ using GreenZoneWifiBot.Utils.Logging;
 using Telegram.Bot;
 
 if (!Directory.Exists("uploads")) Directory.CreateDirectory("uploads");
-if (!Directory.Exists("var"))Directory.CreateDirectory("var");
-if (!Directory.Exists("tmpChoice"))Directory.CreateDirectory("tmpChoice");
+if (!Directory.Exists("var")) Directory.CreateDirectory("var");
+if (!Directory.Exists("tmpChoice")) Directory.CreateDirectory("tmpChoice");
 
 // Creating host builder.
 var builder = Host.CreateDefaultBuilder();

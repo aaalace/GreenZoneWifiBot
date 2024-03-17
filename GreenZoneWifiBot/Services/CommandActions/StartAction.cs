@@ -1,7 +1,5 @@
-﻿using GreenZoneWifiBot.Core;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace GreenZoneWifiBot.Services.CommandActions;
 
