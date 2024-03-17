@@ -29,7 +29,6 @@ public abstract class PollingServiceBase : BackgroundService
             catch (Exception e)
             {
                 _logger.LogError("Polling failed: {ErrorMessage}", e);
-                await Task.Delay(TimeSpan.FromSeconds(5), cts);
             }
         }
     }   

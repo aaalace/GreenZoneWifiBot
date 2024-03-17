@@ -25,7 +25,9 @@ public abstract class ReceiverServiceBase
     {
         var receiverOptions = new ReceiverOptions
         {
-            AllowedUpdates = Array.Empty<UpdateType>(),
+            AllowedUpdates = new[] { UpdateType.Message, UpdateType.EditedMessage, UpdateType.CallbackQuery },
+            ThrowPendingUpdates = true,
+            Offset = 1
         };
 
         var me = await _botClient.GetMeAsync(cts);
