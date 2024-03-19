@@ -61,7 +61,7 @@ public class CsvProcessing
     }
     
     /// <summary>
-    /// Collection -> stream.
+    /// Remakes collection to stream to send to telegram.
     /// </summary>
     public Stream Write(IEnumerable<NetPoint> points)
     {

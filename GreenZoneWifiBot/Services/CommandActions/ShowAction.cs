@@ -9,7 +9,9 @@ namespace GreenZoneWifiBot.Services.CommandActions;
 
 public static partial class Actions
 {
-    // show command
+    /// <summary>
+    /// Calls when "show" button pressed. Represents data in json format.
+    /// </summary>
     public static async Task ShowAction(
         ITelegramBotClient botClient, CallbackQuery callback, CancellationToken cts)
     {

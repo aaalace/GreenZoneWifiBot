@@ -5,6 +5,9 @@ namespace GreenZoneWifiBot.Utils.Logging;
 
 public static class LogManager
 {
+    /// <summary>
+    /// Creates log for income messages.
+    /// </summary>
     public static string CreateMessageLog(Message message)
     {
         var sb = new StringBuilder();
@@ -17,6 +20,9 @@ public static class LogManager
         return sb.ToString();
     }
     
+    /// <summary>
+    /// Creates log for income callbacks.
+    /// </summary>
     public static string CreateCallbackLog(CallbackQuery callback)
     {
         var sb = new StringBuilder();

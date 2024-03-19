@@ -36,7 +36,7 @@ public class JsonProcessing
     }
 
     /// <summary>
-    /// Collection -> stream.
+    /// Remakes collection to stream to send to telegram.
     /// </summary>
     public async Task<Stream> Write(IEnumerable<NetPoint> points)
     {

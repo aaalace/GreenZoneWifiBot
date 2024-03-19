@@ -11,6 +11,9 @@ namespace GreenZoneWifiBot.Services.CommandActions;
 
 public static partial class Actions
 {
+    /// <summary>
+    /// Action that gives "idk whats that" error if it's so. Handling choice value.
+    /// </summary>
     public static async Task PlainTextAction(
         ITelegramBotClient botClient, Message message, CancellationToken cts)
     {

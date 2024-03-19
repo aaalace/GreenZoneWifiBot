@@ -9,6 +9,9 @@ namespace GreenZoneWifiBot.Services.CommandActions;
 
 public static partial class Actions
 {
+    /// <summary>
+    /// Processing of downloading each format: csv/json. 
+    /// </summary>
     public static async Task DownloadFormatAction(
         ITelegramBotClient botClient, CallbackQuery callback, CancellationToken cts)
     {

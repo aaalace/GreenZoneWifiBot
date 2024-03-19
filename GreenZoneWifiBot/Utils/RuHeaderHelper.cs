@@ -4,6 +4,9 @@ public static class RuHeaderHelper
 {
     private const string RuHeader = "Код;global_id;Наименование;Административный округ по адресу;Район;Наименование парка;Имя Wi-Fi сети;Зона покрытия (метры);Признак функционирования;Условия доступа;Пароль;Долгота в WGS-84;Широта в WGS-84;geodata_center;geoarea";
     
+    /// <summary>
+    /// Solves problem with russian header in original csv file.
+    /// </summary>
     public static async Task AddRuHeader(string path)
     {
         var initLines = File.ReadLines(path).ToList();
