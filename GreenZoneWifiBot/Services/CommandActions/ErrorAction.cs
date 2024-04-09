@@ -5,6 +5,9 @@ namespace GreenZoneWifiBot.Services.CommandActions;
 
 public static partial class Actions
 {
+    /// <summary>
+    /// Error action for "callback" requests. 
+    /// </summary>
     public static async Task ErrorCallbackAction(ITelegramBotClient botClient, CallbackQuery callback, 
         CancellationToken cts, string text = "Sorry, I have nothing to tell you about this")
     {
@@ -14,6 +17,9 @@ public static partial class Actions
             cancellationToken: cts);
     }
     
+    /// <summary>
+    /// Error action for "message" requests. 
+    /// </summary>
     public static async Task ErrorMessageAction(ITelegramBotClient botClient, Message message, 
         CancellationToken cts, string text = "Sorry, I have nothing to tell you about this")
     {

@@ -8,6 +8,9 @@ namespace GreenZoneWifiBot.Services.CommandActions;
 
 public static partial class Actions
 {
+    /// <summary>
+    /// Calls when "choose" pressed. Gives user a choice: which field to sort by.
+    /// </summary>
     public static async Task ChooseAction(
         ITelegramBotClient botClient, CallbackQuery callback, CancellationToken cts)
     {
@@ -36,6 +39,9 @@ public static partial class Actions
             cancellationToken: cts);
     }
     
+    /// <summary>
+    /// Does exactly choice processes depend on chosen field.
+    /// </summary>
     public static async Task ChooseFieldAction(
         string field, ITelegramBotClient botClient, CallbackQuery callback, CancellationToken cts)
     {

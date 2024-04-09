@@ -13,6 +13,9 @@ public abstract class PollingServiceBase : BackgroundService
         _serviceProvider = serviceProvider;
     }
  
+    /// <summary>
+    /// Executes receiving from bot.
+    /// </summary>
     protected override async Task ExecuteAsync(CancellationToken cts)
     {
         _logger.LogInformation("Starting polling | {DateTime}", DateTime.Now);
@@ -29,7 +32,6 @@ public abstract class PollingServiceBase : BackgroundService
             catch (Exception e)
             {
                 _logger.LogError("Polling failed: {ErrorMessage}", e);
-                await Task.Delay(TimeSpan.FromSeconds(5), cts);
             }
         }
     }   

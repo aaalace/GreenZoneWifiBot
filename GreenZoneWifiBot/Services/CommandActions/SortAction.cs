@@ -10,6 +10,9 @@ namespace GreenZoneWifiBot.Services.CommandActions;
 
 public static partial class Actions
 {
+    /// <summary>
+    /// Called when "sort" button pressed. Gives choice of fields to sort by
+    /// </summary>
     public static async Task SortAction(
         ITelegramBotClient botClient, CallbackQuery callback, CancellationToken cts)
     {
@@ -35,6 +38,9 @@ public static partial class Actions
             cancellationToken: cts);
     }
 
+    /// <summary>
+    /// Does exactly sort processes depend on chosen field.
+    /// </summary>
     public static async Task SortFieldAction(string field, ITelegramBotClient botClient, CallbackQuery callback, 
         CancellationToken cts)
     {

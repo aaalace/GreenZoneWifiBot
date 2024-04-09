@@ -11,6 +11,10 @@ public class FileLogger : ILogger
 
     public bool IsEnabled(LogLevel logLevel) => true;
 
+    /// <summary>
+    /// Saves logs to file in var folder.
+    /// </summary>
+    /// <typeparam name="TState"></typeparam>
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception, string>? formatter)
     {
         lock (_lock)

@@ -19,6 +19,9 @@ public class CallbackQuieryService : ICallbackQuieryService
         _botClient = botClient;
     }
     
+    /// <summary>
+    /// Handles callbacks. Calls different actions in different CallbackQuiery.Data cases.
+    /// </summary>
     public async Task BotOnCallbackQuieryReceived(CallbackQuery callbackQuery, CancellationToken cts)
     {
         _logger.LogInformation("{LogMessage}", LogManager.CreateCallbackLog(callbackQuery));
